@@ -2,7 +2,7 @@
 import axiosInstance from "./axios";
 
 // GANTI localhost dengan IP Address Raspberry Pi Anda
-const API_BASE_URL = "http://192.168.1.8:5000";
+const API_BASE_URL = "http://192.168.1.100:5000";
 
 export const getViewInfo = async (filePath) => {
   let pathString = filePath;

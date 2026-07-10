@@ -1,12 +1,15 @@
 // src/api/axios.js
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://192.168.1.8:5000";
+// URL API Backend
+// Prioritas: .env (VITE_API_URL) > Default fallback (IP static Pi)
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || "http://192.168.1.100:5000";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 0, // ⚠️ PENTING: Ubah ke 0 (atau angka sangat besar seperti 600000 untuk 10 menit).
-  // 0 berarti TIDAK ADA BATAS WAKTU, sehingga streaming video/audio tidak akan diputus paksa.
+  timeout: 0, // ⚠️ PENTING: 0 = TIDAK ADA BATAS WAKTU
+  // Ini penting agar streaming video/audio besar tidak diputus paksa
   headers: {
     "Content-Type": "application/json",
   },
@@ -21,7 +24,18 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    console.error("API Error:", error.response?.data || error.message);
+    // Log error dengan info yang lebih jelas
+    if (error.code === "ECONNABORTED") {
+      console.error("⏱️ API Timeout:", error.config?.url);
+    } else if (error.code === "ERR_NETWORK") {
+      console.error(
+        "🌐 Network Error (backend tidak reachable):",
+        API_BASE_URL,
+      );
+    } else {
+      console.error("API Error:", error.response?.data || error.message);
+    }
+
     return Promise.reject(error);
   },
 );
