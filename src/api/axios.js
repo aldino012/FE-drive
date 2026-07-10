@@ -4,7 +4,7 @@ import axios from "axios";
 // URL API Backend
 // Prioritas: .env (VITE_API_URL) > Default fallback (IP static Pi)
 const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://192.168.1.100:5000";
+  import.meta.env.VITE_API_URL || "https://192.168.1.100:5000";
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
